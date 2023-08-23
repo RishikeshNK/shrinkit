@@ -1,12 +1,14 @@
 import express, { Request, Response } from "express";
+import config from "./config";
+import router from "./routes";
+import connect from "./utils/connect";
 
 const app = express();
-const PORT = 3000;
+app.use(express.json());
+app.use("/api", router);
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, world!");
-});
-
-app.listen(PORT, () => {
-  console.log(`App is listening at http://localhost:${PORT}`);
+app.listen(config.PORT, () => {
+  console.log(config);
+  console.log(`App is listening at http://localhost:${config.PORT}`);
+  connect();
 });
