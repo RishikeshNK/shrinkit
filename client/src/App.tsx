@@ -1,11 +1,5 @@
-import { Heading, Flex } from "@chakra-ui/react";
+import Form from "./components/Form";
 
 export default function App() {
-  return (
-    <>
-      <Flex height="100vh" alignItems="center" justifyContent="center">
-        <Heading>ShrinkIt</Heading>
-      </Flex>
-    </>
-  );
+  return <Form />;
 }
