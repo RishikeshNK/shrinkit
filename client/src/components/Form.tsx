@@ -9,6 +9,7 @@ import {
   Tooltip,
   InputGroup,
   InputRightElement,
+  Center,
 } from "@chakra-ui/react";
 import { FaCopy } from "react-icons/fa";
 
@@ -17,6 +18,7 @@ export default function Form() {
   const [shrunkUrl, setShrunkUrl] = useState("");
 
   const shrink = () => {
+    // TODO
     setShrunkUrl("https://shrink.it/abc123");
   };
 
@@ -25,13 +27,7 @@ export default function Form() {
   };
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      height="100vh"
-    >
+    <Center width={"100vw"} height={"100vh"}>
       <Box
         p={8}
         width={{ base: "100%", sm: "400px" }}
@@ -81,6 +77,6 @@ export default function Form() {
           </FormControl>
         )}
       </Box>
-    </Box>
+    </Center>
   );
 }
