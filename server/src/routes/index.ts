@@ -1,11 +1,12 @@
-import express, { Request, Response } from "express";
-import { createShortUrl } from "../controllers/shortUrl.controller";
+import express from "express";
+import {
+  createShortUrl,
+  handleShortUrl,
+} from "../controllers/shortUrl.controller";
 
 const router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
-  res.send("Hello, World!");
-});
-router.post("/url", createShortUrl);
+router.post("/api/url", createShortUrl);
+router.get("/:slug", handleShortUrl);
 
 export default router;
