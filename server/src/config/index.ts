@@ -1,4 +1,6 @@
+import "dotenv/config";
+
 export default {
-  PORT: 3000,
-  MONGO_URI: "mongodb://localhost:27017/shrinkit",
+  PORT: process.env.PORT,
+  MONGO_URI: process.env.MONGO_URI,
 };
