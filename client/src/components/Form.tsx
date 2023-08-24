@@ -13,14 +13,22 @@ import {
 } from "@chakra-ui/react";
 import { FaCopy } from "react-icons/fa";
 
+import SERVER_ENDPOINTS from "../config";
+import axios from "axios";
+
 export default function Form() {
   const [originalUrl, setOriginalUrl] = useState("");
   const [shrunkUrl, setShrunkUrl] = useState("");
 
-  const shrink = () => {
-    // TODO
-    setShrunkUrl("https://shrink.it/abc123");
-  };
+  async function shrink() {
+    setShrunkUrl("");
+    const result = await axios
+      .post(`${SERVER_ENDPOINTS}/api/url`, {
+        url: originalUrl,
+      })
+      .then((res) => res.data);
+    setShrunkUrl(`${SERVER_ENDPOINTS}/${result.slug}`);
+  }
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shrunkUrl);
@@ -60,7 +68,7 @@ export default function Form() {
           <FormControl mt={4}>
             <FormLabel>Shrunk URL</FormLabel>
             <InputGroup>
-              <Input value={shrunkUrl} />
+              <Input defaultValue={shrunkUrl} readOnly />
               <InputRightElement>
                 <Tooltip label="Copy to Clipboard" hasArrow>
                   <Button
