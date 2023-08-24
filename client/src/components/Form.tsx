@@ -10,6 +10,7 @@ import {
   InputGroup,
   InputRightElement,
   Center,
+  FormErrorMessage,
 } from "@chakra-ui/react";
 import { FaCopy } from "react-icons/fa";
 
@@ -19,20 +20,42 @@ import axios from "axios";
 export default function Form() {
   const [originalUrl, setOriginalUrl] = useState("");
   const [shrunkUrl, setShrunkUrl] = useState("");
+  const [urlError, setUrlError] = useState("");
+
+  function validateUrl(url: string) {
+    const urlPattern =
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/;
+    return urlPattern.test(url);
+  }
 
   async function shrink() {
     setShrunkUrl("");
+    setUrlError("");
+
+    if (!validateUrl(originalUrl)) {
+      setUrlError("Please enter a valid URL.");
+      return;
+    }
+
     const result = await axios
       .post(`${SERVER_ENDPOINTS}/api/url`, {
         url: originalUrl,
       })
       .then((res) => res.data);
+
     setShrunkUrl(`${SERVER_ENDPOINTS}/${result.slug}`);
   }
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(shrunkUrl);
-  };
+  function handleUrlChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const url = e.target.value;
+    setOriginalUrl(url);
+    if (validateUrl(url) || url === "") {
+      setUrlError("");
+    } else {
+      setUrlError("Please enter a valid URL.");
+      setShrunkUrl("");
+    }
+  }
 
   return (
     <Center width={"100vw"} height={"100vh"}>
@@ -46,14 +69,15 @@ export default function Form() {
         <Heading size="lg" mb={4} textAlign="center">
           ShrinkIt
         </Heading>
-        <FormControl id="original" mb={4}>
+        <FormControl id="original" mb={4} isInvalid={urlError !== ""}>
           <FormLabel>Original URL</FormLabel>
           <Input
             type="url"
             placeholder="https://rishikeshnk.github.io/portfolio/"
             value={originalUrl}
-            onChange={(e) => setOriginalUrl(e.target.value)}
+            onChange={handleUrlChange}
           />
+          {urlError && <FormErrorMessage>{urlError}</FormErrorMessage>}
         </FormControl>
         <Button
           colorScheme="blue"
@@ -75,7 +99,7 @@ export default function Form() {
                     variant="ghost"
                     colorScheme="blue"
                     size="sm"
-                    onClick={copyToClipboard}
+                    onClick={() => navigator.clipboard.writeText(shrunkUrl)}
                   >
                     <FaCopy size={32} />
                   </Button>
